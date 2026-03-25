@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Energie Kalkulator — Formeln & Kennwerte</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #fff;
+      padding: 40px 50px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #c0392b;
+      border-bottom: 3px solid #c0392b;
+      padding-bottom: 10px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 32px;
+    }
+
+    h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #c0392b;
+      margin: 28px 0 10px;
+      border-left: 4px solid #c0392b;
+      padding-left: 10px;
+    }
+
+    h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #333;
+      margin: 18px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+
+    th {
+      background: #c0392b;
+      color: #fff;
+      text-align: left;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: #fafafa; }
+
+    .total-row td {
+      background: #fff5f5 !important;
+      font-weight: 700;
+      border-top: 2px solid #c0392b;
+    }
+
+    .formula {
+      font-family: 'Courier New', monospace;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px 14px;
+      margin: 8px 0;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .note {
+      font-size: 11px;
+      color: #666;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #c0392b;
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .badge-green { background: #27ae60; }
+    .badge-grey  { background: #7f8c8d; }
+
+    .section-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media print {
+      body { padding: 20px 30px; }
+      h2 { page-break-before: auto; }
+      .no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Energie Kalkulator — Formeln &amp; Kennwerte</h1>
+  <p class="subtitle">
+    Projekt: „Abschätzung von Kosteinsparpotenzialien bei der Nutzung eines dynamischen Stromtarifs in Einfamilienhäusern" ·
+    Stand: März 2026 · BeING Inside 2026
+  </p>
+
+  <!-- ─── 1. FESTTARIF ─────────────────────────────────────────── -->
+  <h2>1. Festtarif — Jahreskosten</h2>
+  <div class="section-box no-break">
+    <h3>Kennwerte</h3>
+    <table>
+      <thead><tr><th>Variable</th><th>Bezeichnung</th><th>Wert</th><th>Quelle</th></tr></thead>
+      <tbody>
+        <tr><td>Grundpreis</td><td>Jahresgrundpreis (fix)</td><td>122,96 € / Jahr</td><td>SachsenEnergie Grundversorgung ab 01.01.2026</td></tr>
+        <tr><td>Arbeitspreis</td><td>Verbrauchsabhängiger Preis</td><td>0,3571 € / kWh</td><td>SachsenEnergie Grundversorgung ab 01.01.2026</td></tr>
+        <tr><td>jahresverbrauch</td><td>Jahresstromverbrauch</td><td>individuell (kWh/Jahr)</td><td>Nutzereingabe (1.000 – 10.000 kWh)</td></tr>
+      </tbody>
+    </table>
+    <h3>Formel</h3>
+    <div class="formula">
+      Jahreskosten_Fest = Grundpreis + (jahresverbrauch × Arbeitspreis)<br>
+      Jahreskosten_Fest = 122,96 € + (jahresverbrauch × 0,3571 €/kWh)
+    </div>
+    <p class="note">Beispiel: 4.500 kWh → 122,96 + (4.500 × 0,3571) = <strong>1.729,91 €/Jahr</strong></p>
+  </div>
+
+  <!-- ─── 2. DYNAMISCHER TARIF ──────────────────────────────────── -->
+  <h2>2. Dynamischer Tarif — Jahreskosten (Platzhalterwert)</h2>
+  <div class="section-box no-break">
+    <h3>Kennwerte</h3>
+    <table>
+      <thead><tr><th>Variable</th><th>Bezeichnung</th><th>Wert</th><th>Quelle</th></tr></thead>
+      <tbody>
+        <tr><td>DYNAMIC_PRICE</td><td>Dynamischer Arbeitspreis</td><td>0,22 € / kWh</td><td>Platzhalterwert (EPEX SPOT Ø, Untergrenze)</td></tr>
+        <tr><td>jahresverbrauch</td><td>Jahresstromverbrauch</td><td>individuell (kWh/Jahr)</td><td>Nutzereingabe</td></tr>
+      </tbody>
+    </table>
+    <h3>Formel</h3>
+    <div class="formula">
+      Jahreskosten_Dyn = jahresverbrauch × 0,22 €/kWh
+    </div>
+    <p class="note">⚠ Platzhalterwert. Wird mit echten EPEX SPOT Stundendaten aktualisiert.</p>
+  </div>
+
+  <!-- ─── 3. EINSPARPOTENZIAL ───────────────────────────────────── -->
+  <h2>3. Einsparpotenzial</h2>
+  <div class="section-box no-break">
+    <div class="formula">
+      Einsparpotenzial = Jahreskosten_Fest − Jahreskosten_Dyn<br>
+      Einsparpotenzial = [122,96 + (jahresverbrauch × 0,3571)] − [jahresverbrauch × 0,22]
+    </div>
+    <p class="note">Dies ist die zentrale Ausgabe des Kalkulators — direkte Antwort auf die Forschungsfrage.</p>
+  </div>
+
+  <!-- ─── 4. EPEX SPOT ─────────────────────────────────────────── -->
+  <h2>4. Großhandelspreis (EPEX SPOT)</h2>
+  <div class="section-box no-break">
+    <table>
+      <thead><tr><th>Bestandteil</th><th>Wert (ct/kWh)</th><th>Anmerkung</th></tr></thead>
+      <tbody>
+        <tr><td>EPEX SPOT Day-Ahead DE (Ø 2025)</td><td>8,2 ct/kWh</td><td>82 €/MWh</td></tr>
+        <tr><td>Netzentgelte &amp; Messstellenbetrieb</td><td>8,5 ct/kWh</td><td>—</td></tr>
+        <tr><td>Steuern &amp; Umlagen (EEG, §19)</td><td>5,3 ct/kWh</td><td>—</td></tr>
+        <tr><td>Konzessionsabgabe</td><td>1,8 ct/kWh</td><td>—</td></tr>
+        <tr><td>Umsatzsteuer (19 %)</td><td>ca. 6,1 ct/kWh</td><td>—</td></tr>
+        <tr class="total-row"><td>Endverbraucherpreis (gesamt)</td><td>≈ 32 ct/kWh</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Quelle: epexspot.com/en/market-results</p>
+  </div>
+
+  <!-- ─── 5. PV-ANLAGE ─────────────────────────────────────────── -->
+  <h2>5. PV-Anlage — Jahresertrag</h2>
+  <div class="section-box no-break">
+    <h3>Kennwerte</h3>
+    <table>
+      <thead><tr><th>Variable</th><th>Bezeichnung</th><th>Wert</th><th>Quelle</th></tr></thead>
+      <tbody>
+        <tr><td>G</td><td>Globalstrahlung Dresden</td><td>1.161 kWh/m²/Jahr</td><td>Fraunhofer ISE / Dresden Referenzwert</td></tr>
+        <tr><td>η (eta)</td><td>Wirkungsgrad Module</td><td>0,22 (22 %)</td><td>Monokristallin, Recherche 18–22 %</td></tr>
+        <tr><td>A</td><td>Modulfläche</td><td>individuell (m²)</td><td>Nutzereingabe</td></tr>
+        <tr><td>α (alpha)</td><td>Ausrichtung (0° = Süd, 180° = Nord)</td><td>0° – 180°, Schritte à 10°</td><td>Nutzereingabe (Slider)</td></tr>
+        <tr><td>β (beta)</td><td>Neigungswinkel</td><td>0° – 90°, Schritte à 10°</td><td>Nutzereingabe (Slider)</td></tr>
+        <tr><td>f(α, β)</td><td>Korrekturfaktor Sonneneinstrahlung</td><td>aus Kennwerttabelle (18 × 10 Matrix)</td><td>Kennwerttabelle PV-Anlage_wirklich_final</td></tr>
+      </tbody>
+    </table>
+    <h3>Formel</h3>
+    <div class="formula">
+      E_PV = G × A × η × f(α, β)<br>
+      E_PV = 1.161 kWh/m²/Jahr × A [m²] × 0,22 × f(α, β)
+    </div>
+    <p class="note">
+      Bestätigter Datenpunkt aus Kennwerttabelle: f(α = 0°, β = 30°) = 0,996<br>
+      Horizontale Fläche (β = 0°) hat immer f = 0,870, unabhängig von der Ausrichtung.
+    </p>
+
+    <h3 style="margin-top:14px;">Monatliche Strahlungsverteilung Dresden</h3>
+    <table>
+      <thead><tr><th>Jan</th><th>Feb</th><th>Mär</th><th>Apr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Dez</th><th>Summe</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>37,7</td><td>61,4</td><td>95,1</td><td>129,5</td><td>144,2</td>
+          <td>152,6</td><td>146,4</td><td>138,1</td><td>107,5</td><td>74,6</td>
+          <td>44,0</td><td>29,9</td><td><strong>1.161,0</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">Einheit: kWh/m² · Quelle: Fraunhofer ISE / Dresden Kennwerttabelle</p>
+
+    <h3 style="margin-top:14px;">Vereinfachte Formel (Referenz)</h3>
+    <div class="formula">
+      E_PV_simplified = A × 1.200 × 0,20 × 0,90<br>
+      (G = 1.200 kWh/m²/a, η = 20 %, Winkelertrag = 90 % — feste Annahmen)
+    </div>
+  </div>
+
+  <!-- ─── 6. WALLBOX / E-AUTO ───────────────────────────────────── -->
+  <h2>6. Wallbox / E-Auto — Jahresverbrauch</h2>
+  <div class="section-box no-break">
+    <h3>Kennwerte</h3>
+    <table>
+      <thead><tr><th>Variable</th><th>Bezeichnung</th><th>Wert</th><th>Quelle</th></tr></thead>
+      <tbody>
+        <tr><td>km_jahr</td><td>Jährliche Fahrleistung</td><td>5.000 – 50.000 km/Jahr</td><td>Nutzereingabe</td></tr>
+        <tr><td>Verbrauch E-Auto</td><td>Ø Stromverbrauch</td><td>20 kWh / 100 km</td><td>BeING Inside 2026 Spezifikation</td></tr>
+      </tbody>
+    </table>
+    <h3>Formel</h3>
+    <div class="formula">
+      wallbox_jahr = km_jahr × 20 / 100  [kWh/Jahr]
+    </div>
+    <p class="note">Beispiel: 15.000 km/Jahr → 15.000 × 20 / 100 = <strong>3.000 kWh/Jahr</strong></p>
+  </div>
+
+  <!-- ─── 7. LASTPROFILE ───────────────────────────────────────── -->
+  <h2>7. Lastprofilzuweisung</h2>
+  <div class="section-box no-break">
+    <table>
+      <thead><tr><th>Bedingung</th><th>Lastprofil</th><th>Beschreibung</th></tr></thead>
+      <tbody>
+        <tr><td>PV = Nein</td><td><span class="badge badge-grey">H25</span></td><td>Standard-Haushaltsprofil ohne PV</td></tr>
+        <tr><td>PV = Ja, Speicher = Nein</td><td><span class="badge">P25</span></td><td>Haushalt mit PV, ohne Batteriespeicher</td></tr>
+        <tr><td>PV = Ja, Speicher = Ja</td><td><span class="badge badge-green">S25</span></td><td>Haushalt mit PV und Batteriespeicher</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── 8. §14a MODULE ───────────────────────────────────────── -->
+  <h2>8. §14a-Modulempfehlung (automatisch)</h2>
+  <div class="section-box no-break">
+    <p style="margin-bottom:10px; font-size:12px;">
+      Die §14a-Module werden <strong>nicht direkt abgefragt</strong> — das System empfiehlt sie
+      automatisch basierend auf der Ausstattung. Der Nutzer kann per Opt-out ablehnen.
+    </p>
+    <table>
+      <thead><tr><th>Bedingung (Nutzereingabe)</th><th>Automatische Empfehlung</th><th>Modul</th></tr></thead>
+      <tbody>
+        <tr><td>hat_PV = Ja</td><td>§14a Modul 1 empfehlen</td><td>Steuerbare Erzeugungsanlagen (PV)</td></tr>
+        <tr><td>hat_WP = Ja ODER hat_wallbox = Ja</td><td>§14a Modul 2 empfehlen</td><td>Steuerbare Verbrauchseinrichtungen (WP / Wallbox)</td></tr>
+        <tr><td>Modul 1 aktiv</td><td>§14a Modul 3 verfügbar machen</td><td>Flexibilitätsmanagement</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ─── 9. VARIABLEN-ÜBERSICHT ───────────────────────────────── -->
+  <h2>9. Vollständige Variablen-Übersicht</h2>
+  <div class="section-box no-break">
+    <table>
+      <thead><tr><th>Variable (ID)</th><th>Frage / Bezeichnung</th><th>Typ</th><th>Einheit / Wertebereich</th></tr></thead>
+      <tbody>
+        <tr><td>allg_stromverbrauch</td><td>Allgemeiner Stromverbrauch</td><td>Zahl oder „Unbekannt"</td><td>kWh</td></tr>
+        <tr><td>allg_vorjahr</td><td>Stromverbrauch letztes Jahr (Fallback)</td><td>Zahl</td><td>kWh (wenn Unbekannt gewählt)</td></tr>
+        <tr><td>grundflaeche</td><td>Grundfläche des Hauses</td><td>Zahl</td><td>m² (40 – 300)</td></tr>
+        <tr><td>baujahr</td><td>Baujahr des Hauses</td><td>Text</td><td>—</td></tr>
+        <tr><td>t_innen</td><td>Gewünschte Innentemperatur</td><td>Slider</td><td>°C (16 – 26, Standard: 20)</td></tr>
+        <tr><td>hat_WP</td><td>Wärmepumpe vorhanden?</td><td>Ja / Nein</td><td>—</td></tr>
+        <tr><td>e_auto</td><td>E-Auto / Wallbox vorhanden?</td><td>Ja / Nein</td><td>—</td></tr>
+        <tr><td>km_jahr</td><td>Jährliche Fahrleistung</td><td>Zahl</td><td>km/Jahr (5.000 – 50.000)</td></tr>
+        <tr><td>pv_anlage</td><td>PV-Anlage vorhanden?</td><td>Ja / Nein</td><td>—</td></tr>
+        <tr><td>pv_flaeche</td><td>Fläche der PV-Anlage</td><td>Zahl</td><td>m²</td></tr>
+        <tr><td>pv_ausrichtung</td><td>Ausrichtung der PV-Anlage</td><td>Slider</td><td>° (0 = Süd … 180 = Nord, Schritte à 10)</td></tr>
+        <tr><td>pv_winkel</td><td>Neigungswinkel der PV-Anlage</td><td>Slider</td><td>° (0 – 90, Schritte à 10)</td></tr>
+        <tr><td>speicher</td><td>Batteriespeicher vorhanden?</td><td>Ja / Nein</td><td>—</td></tr>
+        <tr><td>speicher_groesse</td><td>Speicherkapazität</td><td>Zahl</td><td>kWh</td></tr>
+        <tr><td>jahresverbrauch</td><td>Jahresstromverbrauch (letztes Jahr)</td><td>Zahl</td><td>kWh/Jahr (1.000 – 10.000)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top: 32px; font-size: 10px; color: #999; border-top: 1px solid #eee; padding-top: 10px;">
+    Energie Kalkulator · Proof of Concept · BeING Inside 2026 · Alle Angaben sind Schätzwerte auf Basis öffentlicher Marktdaten.
+    Dynamischer Tarif basiert auf Platzhalterwerten und wird mit echten EPEX SPOT Daten aktualisiert.
+  </p>
+
+</body>
+</html>

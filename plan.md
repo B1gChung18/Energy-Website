@@ -156,3 +156,24 @@ Alright i got a list of simple changes I would like you to do in the website:
 	If they answer unknown add the following pop up question: "Was war Ihr Stomverbrauch im letzten Jahr" 
 	format the nature of the pop up the same as in question question 8 "Haben sie eine PV Anlage"
 4. Please also change the Energiebrechnungen tab to show the active calculations, so the formulas with the numbers inputed are shown. Just for better clarity and so we can double check everything much easier.
+
+Prompt 8
+The following document contains information pertaining to formulas and values that need to be implemented into the website. Please implement the formulas and values (from segments 1-4) in relation to their respective questions, and then give me an overview of what you assigned where and how everything works. Please also add all the formulas and such to the "Energieberechnung" tab and have it show the numbers inputted by the user, so we can easily verify. It's fine if some question are still missing formulas or values, don't make anything up just do the ones that are there. 
+Additionaly add a small but visible disclaimer at the bottom stating that all values are estimates and may not completely accurately represent reality. Thanks.
+
+Prompt 9
+More stuff to do:
+1. Need a question changed for question 6 change it to "Haben sie ein Elektroauto"
+	add the subquestions:
+	 Haben sie eine Wallbox?
+	 Dauer der Ladung?
+	 Beginn der Ladezeit fürs Auto
+	-> I'll send in an image of the formula in a moment wait until you get that
+2. Remove question 9 
+	The subquestion of Question 1 is the same as question 9 however only Question 9 affects the graph on the side.
+3. Include a drop down menu for the module recommendation in the overview section
+4. On occasion the site crashes when putting in the value for the size of the solar panel field. 
+	On that note just make sure the site is not prone to crashes
+5. Make a note to yourself somehow that last permanently that makes you correct the grammar in everything that you insert into the website
+6. Make sure that the user can't enter answer that are physically impossible such as a negative use of energy. Don't restrict them any other way
+

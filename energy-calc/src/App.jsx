@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { ALL_QUESTIONS, JAHRESVERBRAUCH_Q } from './data/questions';
+import { ALL_QUESTIONS } from './data/questions';
 import Sidebar from './components/Sidebar';
 import Results from './components/Results';
-import EnergyCalc from './components/EnergyCalc';
 import './App.css';
 
 function isVisible(q, formData) {
@@ -40,7 +39,11 @@ export default function App() {
     new Set(ALL_QUESTIONS.map((q) => q.id))
   );
 
-  const jv = parseFloat(formData.jahresverbrauch) || 0;
+  // Derive annual consumption from Q1: direct value or fallback sub-question
+  const rawConsumption = formData.allg_stromverbrauch;
+  const jv = rawConsumption === 'unbekannt'
+    ? (parseFloat(formData.allg_vorjahr) || 0)
+    : (parseFloat(rawConsumption) || 0);
 
   function setAnswer(id, value) {
     setFormData((prev) => ({ ...prev, [id]: value }));
@@ -281,8 +284,6 @@ export default function App() {
           </div>
         )}
       </main>
-
-      <EnergyCalc formData={formData} jahresverbrauch={jv} />
 
       <footer className="footer">
         <p>Energie Kalkulator · Proof of Concept · 2026</p>

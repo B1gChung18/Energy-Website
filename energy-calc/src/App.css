@@ -520,6 +520,381 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
 }
 .reset-btn:hover { background: var(--red); color: var(--white); }
 
+/* ── Results Overview Grid ── */
+.results-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.result-panel {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.result-panel-green {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+}
+
+.result-panel-gray {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+}
+
+.result-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--gray-400);
+  margin-bottom: 14px;
+}
+
+/* savings hero (top-left panel) */
+.rp-savings-hero {
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rp-savings-label { font-size: 12px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.5px; }
+.rp-savings-value { font-size: 24px; font-weight: 800; color: var(--green); }
+
+.rp-cost-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.rp-cost-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 13px;
+}
+.rp-cost-list li:last-child { border-bottom: none; }
+.rp-cost-key { color: var(--gray-600); }
+.rp-cost-val { font-weight: 700; color: var(--black); }
+.rp-green { color: var(--green) !important; }
+
+/* recommendation panel (top-right) */
+.rp-rec-badge {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  margin-bottom: 14px;
+  color: var(--black);
+}
+.result-panel-green .rp-rec-badge { color: var(--green); border-color: #86EFAC; }
+
+.rp-vars {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 12px;
+}
+.rp-var-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 12px;
+}
+.rp-var-row:last-child { border-bottom: none; }
+.rp-var-key { color: var(--gray-600); }
+.rp-var-val { font-weight: 700; color: var(--black); }
+
+.rp-badge-profile {
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--red);
+  color: var(--white);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.rp-explanation {
+  font-size: 12px;
+  color: var(--gray-600);
+  line-height: 1.6;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+/* module list (bottom-left) */
+.rp-module-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rp-module-item {
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--gray-200);
+}
+.rp-module-active   { background: #F0FDF4; border-color: #86EFAC; }
+.rp-module-available { background: var(--gray-100); border-color: var(--gray-200); }
+
+.rp-module-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.rp-module-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--green);
+  color: var(--white);
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.rp-module-badge-gray { background: var(--gray-400); }
+.rp-module-name { font-size: 13px; font-weight: 600; color: var(--black); }
+.rp-module-vars { font-size: 11px; color: var(--gray-600); padding-left: 2px; }
+
+/* chart (bottom-right) */
+.rp-chart { display: flex; flex-direction: column; gap: 10px; }
+
+.rp-bar-row { display: flex; flex-direction: column; gap: 4px; }
+.rp-bar-label { font-size: 11px; font-weight: 600; color: var(--gray-600); }
+.rp-bar-track {
+  width: 100%;
+  height: 18px;
+  background: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rp-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+.rp-bar-fest { background: var(--red); }
+.rp-bar-dyn  { background: #F87171; }
+.rp-bar-pv   { background: var(--green); }
+.rp-bar-value { font-size: 11px; font-weight: 700; color: var(--black); }
+
+.rp-savings-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  border-radius: 6px;
+  padding: 7px 12px;
+}
+.rp-savings-bar-label { font-size: 12px; font-weight: 600; color: var(--green); }
+.rp-savings-bar-value { font-size: 13px; font-weight: 800; color: var(--green); }
+
+/* collapsible sections */
+.rp-collapsible-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.rp-collapsible-btn:hover { border-color: var(--red); color: var(--red); }
+
+.rp-collapsible-content {
+  border: 1px solid var(--gray-200);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 20px 20px 24px;
+  margin-bottom: 2px;
+  background: var(--white);
+}
+
+.rp-section-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 10px;
+}
+
+.answers-summary-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.answers-summary-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 12px;
+  background: var(--gray-100);
+  border-radius: 6px;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.rp-note {
+  font-size: 11px;
+  color: var(--gray-400);
+  line-height: 1.4;
+}
+
+/* ── E-Auto Ladezeit Optimierung ── */
+.lade-optimierung-box {
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  background: var(--white);
+}
+
+.lade-optimierung-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lade-optimierung-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.lade-optimierung-badge {
+  font-size: 13px;
+  font-weight: 700;
+  background: #DCFCE7;
+  color: var(--green);
+  border: 1px solid #86EFAC;
+  border-radius: 20px;
+  padding: 4px 14px;
+}
+
+.lade-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.lade-card {
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lade-card-current {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+}
+
+.lade-card-optimal {
+  background: #F0FDF4;
+  border: 1px solid #86EFAC;
+}
+
+.lade-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--gray-400);
+}
+
+.lade-card-optimal .lade-card-label { color: var(--green); }
+
+.lade-card-time {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -0.5px;
+}
+
+.lade-card-optimal .lade-card-time { color: var(--green); }
+
+.lade-stats {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.lade-stats li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  color: var(--gray-600);
+}
+
+.lade-stats li:last-child { border-bottom: none; }
+
+.lade-cost-val {
+  font-weight: 700;
+  color: var(--black);
+}
+
+.lade-cost-green { color: var(--green) !important; }
+
+.lade-hourly {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.lade-hour-chip {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.lade-hour-label { font-size: 10px; color: var(--gray-400); }
+.lade-hour-price { font-size: 11px; font-weight: 700; color: var(--black); }
+
+.lade-saving-note {
+  font-size: 12px;
+  color: var(--green);
+  background: #DCFCE7;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
 /* ── Energieberechnungen Section ── */
 .energy-calc-section {
   background: var(--white);
@@ -734,6 +1109,9 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
+  .results-overview-grid {
+    grid-template-columns: 1fr;
+  }
   .two-col {
     grid-template-columns: 1fr;
   }

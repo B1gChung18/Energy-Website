@@ -1,3 +1,4 @@
+// 1. Gebäude & Verbrauch
 export const QUESTION_DEFS = [
   {
     id: 'allg_stromverbrauch',
@@ -16,11 +17,12 @@ export const QUESTION_DEFS = [
     parentValue: 'unbekannt',
   },
   {
-    id: 'wohnflaeche',
-    question: 'Wie groß ist Ihre beheizte Wohnfläche?',
+    id: 'grundflaeche',
+    question: 'Wie groß ist die Grundfläche Ihres Hauses?',
     type: 'number',
     unit: 'm²',
     placeholder: 'z. B. 120',
+    hint: '40 – 300 m²',
   },
   {
     id: 'baujahr',
@@ -29,30 +31,59 @@ export const QUESTION_DEFS = [
     placeholder: 'z. B. 1985',
   },
   {
-    id: 'bewohner_gesamt',
-    question: 'Wie viele Personen leben in Ihrem Haushalt?',
-    type: 'number',
-    placeholder: 'z. B. 3',
+    id: 't_innen',
+    question: 'Gewünschte Innentemperatur',
+    type: 'slider',
+    min: 16,
+    max: 26,
+    step: 1,
+    defaultValue: 20,
+    unit: '°C',
+  },
+
+  // 2. Wärmepumpe
+  {
+    id: 'hat_WP',
+    question: 'Haben Sie eine Wärmepumpe?',
+    type: 'yesno',
+  },
+
+  // 3. Wallbox / E-Auto
+  {
+    id: 'e_auto',
+    question: 'Haben Sie ein Elektroauto / eine Wallbox?',
+    type: 'yesno',
   },
   {
-    id: 'bewohner_tag',
-    question: 'Wie viele Personen sind tagsüber (ca. 8–16 Uhr) zuhause?',
+    id: 'km_jahr',
+    question: 'Wie viele Kilometer fahren Sie jährlich?',
     type: 'number',
-    placeholder: 'z. B. 1',
+    unit: 'km / Jahr',
+    placeholder: 'z. B. 15000',
+    hint: '5.000 – 50.000 km',
+    parent: 'e_auto',
   },
   {
-    id: 'bewohner_abend',
-    question: 'Wie viele Personen sind abends (ca. 16–24 Uhr) zuhause?',
-    type: 'number',
-    placeholder: 'z. B. 3',
+    id: 'lade_beginn',
+    question: 'Wann beginnen Sie das E-Auto zu laden?',
+    type: 'slider',
+    min: 0,
+    max: 23,
+    step: 1,
+    defaultValue: 17,
+    unit: ' Uhr',
+    parent: 'e_auto',
   },
   {
-    id: 'heizstunden',
-    question: 'Wie viele Stunden täglich wird geheizt?',
+    id: 'lade_dauer',
+    question: 'Wie lange laden Sie das E-Auto?',
     type: 'number',
     unit: 'h',
-    placeholder: 'z. B. 8',
+    placeholder: 'z. B. 4',
+    parent: 'e_auto',
   },
+
+  // 4. PV-Anlage & Batteriespeicher
   {
     id: 'pv_anlage',
     question: 'Haben Sie eine PV-Anlage?',
@@ -90,7 +121,7 @@ export const QUESTION_DEFS = [
   },
   {
     id: 'speicher',
-    question: 'Haben Sie einen Stromspeicher (z. B. Hausbatterie)?',
+    question: 'Haben Sie einen Batteriespeicher?',
     type: 'yesno',
   },
   {
@@ -101,32 +132,7 @@ export const QUESTION_DEFS = [
     placeholder: 'z. B. 10',
     parent: 'speicher',
   },
-  {
-    id: 'e_auto',
-    question: 'Haben Sie ein Elektroauto?',
-    type: 'yesno',
-  },
-  {
-    id: 'stockwerke',
-    question: 'Wie viele Stockwerke hat Ihr Haus?',
-    type: 'number',
-    placeholder: 'z. B. 2',
-  },
-  {
-    id: 'heizungssystem',
-    question: 'Welches Heizungssystem verwenden Sie?',
-    type: 'choice',
-    options: ['Wärmepumpe', 'Gasheizung', 'Fönheizung', 'Fernwärme'],
-  },
 ];
 
-export const JAHRESVERBRAUCH_Q = {
-  id: 'jahresverbrauch',
-  question: 'Wie hoch war Ihr Stromverbrauch im letzten Jahr?',
-  type: 'number',
-  unit: 'kWh / Jahr',
-  placeholder: 'z. B. 4500',
-};
-
 // All questions in display order
-export const ALL_QUESTIONS = [...QUESTION_DEFS, JAHRESVERBRAUCH_Q];
+export const ALL_QUESTIONS = [...QUESTION_DEFS];

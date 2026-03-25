@@ -16,6 +16,10 @@ export default function EnergyCalc({ formData = {}, jahresverbrauch = 0 }) {
   const hasJV = jahresverbrauch > 0;
   const festCost = hasJV ? Math.round(GRUNDPREIS + jahresverbrauch * ARBEITSPREIS) : null;
 
+  const kmJahr      = parseFloat(formData.km_jahr) || 0;
+  const hasWallbox  = formData.e_auto === 'ja';
+  const wallboxJahr = hasWallbox ? Math.round(kmJahr * 20 / 100) : 0;
+
   const hasPv = formData.pv_anlage === 'ja';
   const pvFlaeche     = hasPv ? (parseFloat(formData.pv_flaeche)     || 0) : 0;
   const pvAusrichtung = hasPv ? (parseFloat(formData.pv_ausrichtung) ?? 0) : 0;
@@ -120,6 +124,47 @@ export default function EnergyCalc({ formData = {}, jahresverbrauch = 0 }) {
                 <tr className="total-row"><td><strong>Gesamt (Endverbraucher)</strong></td><td><strong>≈ 32</strong></td></tr>
               </tbody>
             </table>
+          </div>
+
+          <div className="calc-block">
+            <h4>Wallbox / E-Auto — Jahresverbrauch</h4>
+            <p>
+              Der jährliche Ladestromverbrauch eines Elektroautos ergibt sich aus der Fahrleistung
+              und dem durchschnittlichen Verbrauch von 20 kWh pro 100 km.
+            </p>
+            <table className="calc-table">
+              <thead>
+                <tr><th>Bestandteil</th><th>Wert</th><th>Berechnung</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jährliche Fahrleistung</td>
+                  <td>{hasWallbox && kmJahr > 0 ? `${kmJahr.toLocaleString('de-DE')} km` : 'nicht eingegeben'}</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Ø Verbrauch E-Auto</td>
+                  <td>20 kWh / 100 km</td>
+                  <td>—</td>
+                </tr>
+                <tr className="total-row">
+                  <td><strong>Wallbox-Jahresverbrauch</strong></td>
+                  <td>
+                    <strong>
+                      {hasWallbox && kmJahr > 0
+                        ? `ca. ${wallboxJahr.toLocaleString('de-DE')} kWh`
+                        : '—'}
+                    </strong>
+                  </td>
+                  <td>
+                    {hasWallbox && kmJahr > 0
+                      ? `= ${kmJahr.toLocaleString('de-DE')} × 20 / 100`
+                      : 'wallbox_jahr = km_jahr × 20 / 100'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p>Quelle: BeING Inside 2026 Spezifikation — Nutzereingaben §3 Wallbox/E-Auto.</p>
           </div>
 
           <div className="calc-block">
