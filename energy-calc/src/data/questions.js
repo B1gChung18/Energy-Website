@@ -1,86 +1,132 @@
-export const questions = [
+export const QUESTION_DEFS = [
   {
-    id: 'residents',
+    id: 'allg_stromverbrauch',
+    question: 'Wie hoch ist Ihr allgemeiner Stromverbrauch?',
+    type: 'number_or_unknown',
+    unit: 'kWh',
+    placeholder: 'z. B. 3000',
+  },
+  {
+    id: 'allg_vorjahr',
+    question: 'Was war Ihr Stromverbrauch im letzten Jahr?',
+    type: 'number',
+    unit: 'kWh',
+    placeholder: 'z. B. 3000',
+    parent: 'allg_stromverbrauch',
+    parentValue: 'unbekannt',
+  },
+  {
+    id: 'wohnflaeche',
+    question: 'Wie groß ist Ihre beheizte Wohnfläche?',
+    type: 'number',
+    unit: 'm²',
+    placeholder: 'z. B. 120',
+  },
+  {
+    id: 'baujahr',
+    question: 'Wann wurde Ihr Haus gebaut?',
+    type: 'text',
+    placeholder: 'z. B. 1985',
+  },
+  {
+    id: 'bewohner_gesamt',
     question: 'Wie viele Personen leben in Ihrem Haushalt?',
-    options: [
-      { label: '1 Person', value: 1500 },
-      { label: '2 Personen', value: 2800 },
-      { label: '4 Personen', value: 4500 },
-    ],
+    type: 'number',
+    placeholder: 'z. B. 3',
   },
   {
-    id: 'stories',
-    question: 'Wie viele Stockwerke hat Ihr Zuhause?',
-    options: [
-      { label: '1 Stockwerk', value: 300 },
-      { label: '2 Stockwerke', value: 600 },
-      { label: '3 Stockwerke', value: 900 },
-    ],
+    id: 'bewohner_tag',
+    question: 'Wie viele Personen sind tagsüber (ca. 8–16 Uhr) zuhause?',
+    type: 'number',
+    placeholder: 'z. B. 1',
   },
   {
-    id: 'ev',
-    question: 'Besitzen Sie ein Elektrofahrzeug?',
-    options: [
-      { label: 'Ja', value: 2000 },
-      { label: 'Nein', value: 0 },
-    ],
+    id: 'bewohner_abend',
+    question: 'Wie viele Personen sind abends (ca. 16–24 Uhr) zuhause?',
+    type: 'number',
+    placeholder: 'z. B. 3',
   },
   {
-    id: 'storage',
-    question: 'Verfügen Sie über einen Stromspeicher?',
-    options: [
-      { label: 'Ja', value: -400 },
-      { label: 'Nein', value: 0 },
-    ],
+    id: 'heizstunden',
+    question: 'Wie viele Stunden täglich wird geheizt?',
+    type: 'number',
+    unit: 'h',
+    placeholder: 'z. B. 8',
   },
   {
-    id: 'climate',
-    question: 'Wie häufig nutzen Sie Klimatisierung oder Heizung aktiv?',
-    options: [
-      { label: 'Oft', value: 1500 },
-      { label: 'Manchmal', value: 500 },
-      { label: 'Nie', value: 0 },
-    ],
+    id: 'pv_anlage',
+    question: 'Haben Sie eine PV-Anlage?',
+    type: 'yesno',
+  },
+  {
+    id: 'pv_flaeche',
+    question: 'Wie groß ist die Fläche der PV-Anlage?',
+    type: 'number',
+    unit: 'm²',
+    placeholder: 'z. B. 20',
+    parent: 'pv_anlage',
+  },
+  {
+    id: 'pv_ausrichtung',
+    question: 'Wie ist die Ausrichtung Ihrer PV-Anlage?',
+    type: 'slider',
+    min: 0,
+    max: 180,
+    step: 10,
+    defaultValue: 0,
+    unit: '°',
+    parent: 'pv_anlage',
+  },
+  {
+    id: 'pv_winkel',
+    question: 'Wie groß ist der Neigungswinkel Ihrer PV-Anlage?',
+    type: 'slider',
+    min: 0,
+    max: 90,
+    step: 10,
+    defaultValue: 30,
+    unit: '°',
+    parent: 'pv_anlage',
+  },
+  {
+    id: 'speicher',
+    question: 'Haben Sie einen Stromspeicher (z. B. Hausbatterie)?',
+    type: 'yesno',
+  },
+  {
+    id: 'speicher_groesse',
+    question: 'Wie groß ist Ihr Speicher (Kapazität)?',
+    type: 'number',
+    unit: 'kWh',
+    placeholder: 'z. B. 10',
+    parent: 'speicher',
+  },
+  {
+    id: 'e_auto',
+    question: 'Haben Sie ein Elektroauto?',
+    type: 'yesno',
+  },
+  {
+    id: 'stockwerke',
+    question: 'Wie viele Stockwerke hat Ihr Haus?',
+    type: 'number',
+    placeholder: 'z. B. 2',
+  },
+  {
+    id: 'heizungssystem',
+    question: 'Welches Heizungssystem verwenden Sie?',
+    type: 'choice',
+    options: ['Wärmepumpe', 'Gasheizung', 'Fönheizung', 'Fernwärme'],
   },
 ];
 
-export const metricsTable = [
-  {
-    category: 'Haushaltsgröße',
-    rows: [
-      { option: '1 Person', kwh: 1.500 },
-      { option: '2 Personen', kwh: 2.800 },
-      { option: '4 Personen', kwh: 4.500 },
-    ],
-  },
-  {
-    category: 'Stockwerke',
-    rows: [
-      { option: '1 Stockwerk', kwh: 300 },
-      { option: '2 Stockwerke', kwh: 600 },
-      { option: '3 Stockwerke', kwh: 900 },
-    ],
-  },
-  {
-    category: 'Elektrofahrzeug',
-    rows: [
-      { option: 'Ja', kwh: 2000 },
-      { option: 'Nein', kwh: 0 },
-    ],
-  },
-  {
-    category: 'Stromspeicher',
-    rows: [
-      { option: 'Ja', kwh: -400 },
-      { option: 'Nein', kwh: 0 },
-    ],
-  },
-  {
-    category: 'Klimatisierung / Heizung',
-    rows: [
-      { option: 'Oft', kwh: 1500 },
-      { option: 'Manchmal', kwh: 500 },
-      { option: 'Nie', kwh: 0 },
-    ],
-  },
-];
+export const JAHRESVERBRAUCH_Q = {
+  id: 'jahresverbrauch',
+  question: 'Wie hoch war Ihr Stromverbrauch im letzten Jahr?',
+  type: 'number',
+  unit: 'kWh / Jahr',
+  placeholder: 'z. B. 4500',
+};
+
+// All questions in display order
+export const ALL_QUESTIONS = [...QUESTION_DEFS, JAHRESVERBRAUCH_Q];

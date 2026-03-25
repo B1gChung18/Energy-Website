@@ -1,11 +1,27 @@
 import { useState } from 'react';
-import { metricsTable } from '../data/questions';
+import {
+  GLOBALSTRAHLUNG_DRESDEN,
+  WIRKUNGSGRAD_PV,
+  calcPvErtrag,
+  getSonneneinstrahlung,
+} from '../data/pvData';
 
-const EPEX_PRICE = 82; // €/MWh Day-Ahead DE avg 2025
-const CONSUMER_PRICE = 0.32; // €/kWh end consumer
+const EPEX_PRICE  = 82;     // €/MWh Day-Ahead DE avg 2025
+const GRUNDPREIS  = 122.96; // EUR/Jahr
+const ARBEITSPREIS = 0.3571; // EUR/kWh
 
-export default function EnergyCalc() {
+export default function EnergyCalc({ formData = {}, jahresverbrauch = 0 }) {
   const [open, setOpen] = useState(false);
+
+  const hasJV = jahresverbrauch > 0;
+  const festCost = hasJV ? Math.round(GRUNDPREIS + jahresverbrauch * ARBEITSPREIS) : null;
+
+  const hasPv = formData.pv_anlage === 'ja';
+  const pvFlaeche     = hasPv ? (parseFloat(formData.pv_flaeche)     || 0) : 0;
+  const pvAusrichtung = hasPv ? (parseFloat(formData.pv_ausrichtung) ?? 0) : 0;
+  const pvWinkel      = hasPv ? (parseFloat(formData.pv_winkel)      ?? 30) : 0;
+  const pvKorrektur   = hasPv && pvFlaeche > 0 ? getSonneneinstrahlung(pvAusrichtung, pvWinkel) : null;
+  const pvErtrag      = hasPv && pvFlaeche > 0 ? Math.round(calcPvErtrag(pvFlaeche, pvAusrichtung, pvWinkel)) : null;
 
   return (
     <div className="energy-calc-section">
@@ -38,6 +54,54 @@ export default function EnergyCalc() {
           </div>
 
           <div className="calc-block">
+            <h4>Jahreskosten (Festtarif)</h4>
+            <p>
+              Die Jahreskosten im Festtarif setzen sich aus einem fixen Grundpreis und einem
+              verbrauchsabhängigen Arbeitspreis zusammen.
+            </p>
+            <table className="calc-table">
+              <thead>
+                <tr><th>Bestandteil</th><th>Wert</th><th>Berechnung</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Grundpreis</td>
+                  <td>122,96 € / Jahr</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Arbeitspreis</td>
+                  <td>0,3571 € / kWh</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Jahresverbrauch</td>
+                  <td>{hasJV ? `${jahresverbrauch.toLocaleString('de-DE')} kWh` : 'nicht eingegeben'}</td>
+                  <td>—</td>
+                </tr>
+                <tr className="total-row">
+                  <td><strong>Jahreskosten</strong></td>
+                  <td>
+                    <strong>
+                      {hasJV
+                        ? `${festCost.toLocaleString('de-DE')} €`
+                        : '—'}
+                    </strong>
+                  </td>
+                  <td>
+                    {hasJV
+                      ? `= 122,96 + (${jahresverbrauch.toLocaleString('de-DE')} × 0,3571)`
+                      : '= 122,96 + (Verbrauch × 0,3571)'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p>
+              Quelle: SachsenEnergie Grundversorgung ab 01.01.2026.
+            </p>
+          </div>
+
+          <div className="calc-block">
             <h4>Endverbraucherpreis</h4>
             <p>
               Der Preis, den Haushalte zahlen, setzt sich zusammen aus Großhandelspreis,
@@ -53,36 +117,76 @@ export default function EnergyCalc() {
                 <tr><td>Steuern & Umlagen (EEG, §19)</td><td>5,3</td></tr>
                 <tr><td>Konzessionsabgabe</td><td>1,8</td></tr>
                 <tr><td>Umsatzsteuer (19 %)</td><td>ca. 6,1</td></tr>
-                <tr className="total-row"><td><strong>Gesamt (Endverbraucher)</strong></td><td><strong>≈ {(CONSUMER_PRICE * 100).toFixed(0)}</strong></td></tr>
+                <tr className="total-row"><td><strong>Gesamt (Endverbraucher)</strong></td><td><strong>≈ 32</strong></td></tr>
               </tbody>
             </table>
           </div>
 
           <div className="calc-block">
-            <h4>Verbrauchswerte je Antwort</h4>
-            <p>Folgende Verbrauchswerte fließen in die Berechnung ein (Quelle: Bundesnetzagentur 2024, BDEW):</p>
-            <table className="metrics-table">
+            <h4>PV-Anlage — Jahresertrag</h4>
+            <p>
+              Der Jahresertrag einer PV-Anlage hängt von der Modulfläche, dem Wirkungsgrad der
+              Module sowie einem Korrekturfaktor für Ausrichtung und Neigungswinkel ab.
+              Die Strahlungsdaten basieren auf Referenzwerten für den Raum Dresden (Fraunhofer ISE).
+            </p>
+            <table className="calc-table">
               <thead>
-                <tr><th>Kategorie</th><th>Option</th><th>kWh / Jahr</th></tr>
+                <tr><th>Bestandteil</th><th>Wert</th><th>Berechnung</th></tr>
               </thead>
               <tbody>
-                {metricsTable.map((section) =>
-                  section.rows.map((row, i) => (
-                    <tr key={`${section.category}-${i}`}>
-                      {i === 0 && (
-                        <td rowSpan={section.rows.length} className="category-cell">
-                          {section.category}
-                        </td>
-                      )}
-                      <td>{row.option}</td>
-                      <td className={row.kwh < 0 ? 'negative' : ''}>
-                        {row.kwh < 0 ? '−' : '+'}{Math.abs(row.kwh).toLocaleString('de-DE')}
-                      </td>
-                    </tr>
-                  ))
-                )}
+                <tr>
+                  <td>Globalstrahlung Dresden (G)</td>
+                  <td>{GLOBALSTRAHLUNG_DRESDEN} kWh/m²/Jahr</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Wirkungsgrad (η)</td>
+                  <td>{(WIRKUNGSGRAD_PV * 100).toFixed(0)} % (monokristallin)</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Modulfläche (A)</td>
+                  <td>{hasPv && pvFlaeche > 0 ? `${pvFlaeche} m²` : 'nicht eingegeben'}</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Ausrichtung (α)</td>
+                  <td>{hasPv ? `${pvAusrichtung}° (0° = Süd)` : '—'}</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Neigungswinkel (β)</td>
+                  <td>{hasPv ? `${pvWinkel}°` : '—'}</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Korrekturfaktor f(α, β)</td>
+                  <td>{pvKorrektur !== null ? pvKorrektur.toFixed(3) : '—'}</td>
+                  <td>aus Kennwerttabelle</td>
+                </tr>
+                <tr className="total-row">
+                  <td><strong>Jahresertrag E</strong></td>
+                  <td>
+                    <strong>
+                      {pvErtrag !== null
+                        ? `ca. ${pvErtrag.toLocaleString('de-DE')} kWh`
+                        : hasPv ? 'Fläche fehlt' : '—'}
+                    </strong>
+                  </td>
+                  <td>
+                    {pvErtrag !== null
+                      ? `= ${GLOBALSTRAHLUNG_DRESDEN} × ${pvFlaeche} × ${WIRKUNGSGRAD_PV} × ${pvKorrektur.toFixed(3)}`
+                      : 'E = G × A × η × f(α, β)'}
+                  </td>
+                </tr>
               </tbody>
             </table>
+            <p>
+              Quelle: Fraunhofer ISE / Kennwerttabelle „PV-Anlage_wirklich_final_(hoffentlich).xlsx".
+              Monatliche Strahlungsverteilung Dresden: Jan 37,7 · Feb 61,4 · Mär 95,1 · Apr 129,5 ·
+              Mai 144,2 · Jun 152,6 · Jul 146,4 · Aug 138,1 · Sep 107,5 · Okt 74,6 · Nov 44,0 · Dez 29,9 kWh/m².
+              Jahressumme: 1.161 kWh/m².
+            </p>
           </div>
 
           <p className="calc-disclaimer">

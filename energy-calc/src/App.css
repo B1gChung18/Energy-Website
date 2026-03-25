@@ -37,7 +37,8 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 18px 0;
+  padding: 14px 0;
+  width: 100%;
 }
 .header-logo { font-size: 26px; line-height: 1; }
 .header-title { font-size: 22px; font-weight: 700; letter-spacing: -0.4px; }
@@ -118,6 +119,34 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
 }
 .option-btn:hover { border-color: var(--red); background: var(--red-light); }
 .option-btn.selected { border-color: var(--red); background: var(--red); color: var(--white); }
+
+/* ── kWh Text Input ── */
+.kwh-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kwh-input {
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--black);
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  width: 180px;
+  transition: border-color 0.15s;
+  outline: none;
+}
+.kwh-input:focus { border-color: var(--red); }
+.kwh-input::placeholder { font-weight: 400; color: var(--gray-400); }
+
+.kwh-unit {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
 
 /* ── Calculate Bar ── */
 .calculate-bar {
@@ -220,7 +249,27 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
 }
 
 .user-bar { background: var(--red); }
-.avg-bar { background: var(--gray-400); }
+.avg-bar  { background: var(--gray-400); }
+.dyn-bar  { background: #F87171; } /* lighter red for dynamic tariff */
+
+/* ── Savings Badge (chart) ── */
+.savings-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 4px;
+}
+.savings-badge-label { font-size: 12px; font-weight: 600; color: var(--green); }
+.savings-badge-value { font-size: 13px; font-weight: 800; color: var(--green); }
+
+/* ── Savings row in info list ── */
+.savings-row { background: #DCFCE7; border-radius: 6px; padding: 8px 10px !important; border-bottom: none !important; }
+.info-key-savings { color: var(--green) !important; font-weight: 700; }
+.info-val-savings { color: var(--green) !important; font-size: 15px !important; }
 
 .bar-value {
   font-size: 12px;
@@ -326,7 +375,70 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
 .result-item-label { font-size: 12px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px; }
 .result-divider { width: 1px; background: var(--gray-200); }
 
-.cost-note { font-size: 12px; color: var(--gray-400); margin-bottom: 28px; }
+/* ── Results Cost Grid ── */
+.result-cost-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.result-cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--white);
+}
+.result-cost-label { font-size: 14px; color: var(--gray-600); }
+.result-cost-value { font-size: 18px; font-weight: 700; color: var(--black); }
+.result-cost-unit  { font-size: 13px; font-weight: 400; color: var(--gray-400); }
+
+.result-savings-item {
+  background: #DCFCE7;
+  border-color: #86EFAC;
+}
+.result-savings-label { font-weight: 700; color: var(--green); font-size: 15px; }
+.result-savings-value { font-size: 22px; font-weight: 800; color: var(--green); }
+
+.cost-note { font-size: 12px; color: var(--gray-400); margin-bottom: 16px; }
+
+/* ── Recommendation Box ── */
+.recommendation-box {
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.recommendation-yes {
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+}
+.recommendation-no {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+}
+.recommendation-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--gray-400);
+  margin-bottom: 4px;
+}
+.recommendation-yes .recommendation-title { color: var(--green); }
+.recommendation-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--gray-600);
+  line-height: 1.65;
+}
+.recommendation-no .recommendation-text { color: var(--gray-600); }
 
 .answers-summary { margin-bottom: 24px; }
 .answers-summary h3 {
@@ -487,6 +599,128 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
   font-size: 13px;
   color: var(--gray-400);
   font-style: italic;
+}
+
+/* ── Options Button (header) ── */
+.options-btn {
+  margin-left: auto;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-600);
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.options-btn:hover,
+.options-btn-active { border-color: var(--red); color: var(--red); }
+
+/* ── Options Panel ── */
+.options-panel {
+  background: var(--white);
+  border-bottom: 2px solid var(--gray-200);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.options-panel-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+.options-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.options-desc {
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-bottom: 16px;
+}
+.options-list-items {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 8px;
+}
+.options-item { display: flex; }
+.options-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  width: 100%;
+  transition: background 0.1s;
+}
+.options-label:hover { background: var(--gray-100); }
+.options-label-locked { color: var(--gray-400); cursor: default; }
+.options-label input[type="checkbox"] { accent-color: var(--red); width: 15px; height: 15px; }
+.options-locked-badge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  background: var(--red-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ── Slider ── */
+.slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.slider-value-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.slider-current-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--red);
+  min-width: 56px;
+}
+.slider-direction-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+  background: var(--gray-100);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.slider-input {
+  width: 100%;
+  accent-color: var(--red);
+  height: 6px;
+  cursor: pointer;
+}
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--gray-400);
+}
+
+/* ── Sub-question card ── */
+.sub-question-card {
+  margin-left: 32px;
+  border-left: 3px solid var(--red-light);
+}
+.sub-question-card .question-number {
+  color: var(--red);
+  font-size: 16px;
+}
+
+/* ── Disabled question ── */
+.question-disabled {
+  opacity: 0.45;
 }
 
 /* ── Footer ── */
