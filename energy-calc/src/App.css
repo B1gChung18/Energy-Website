@@ -586,9 +586,59 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
   font-size: 13px;
 }
 .rp-cost-list li:last-child { border-bottom: none; }
-.rp-cost-key { color: var(--gray-600); }
+.rp-cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 13px;
+}
+.rp-cost-item:last-child { border-bottom: none; }
+.rp-cost-best { background: #F0FDF4; border-radius: 6px; padding: 9px 8px; }
+.rp-cost-optout { opacity: 0.4; }
+.rp-cost-na { opacity: 0.55; }
+.rp-cost-key { color: var(--gray-600); flex: 1; }
 .rp-cost-val { font-weight: 700; color: var(--black); }
 .rp-green { color: var(--green) !important; }
+
+/* opt-out button */
+.rp-optout-btn {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--gray-400);
+  background: var(--white);
+  color: var(--gray-600);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.rp-optout-btn.active {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red-dark);
+}
+.rp-optout-tag {
+  font-size: 10px;
+  color: var(--red);
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+/* extra row below cost list */
+.rp-extra-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 8px 0 0;
+  border-top: 1px dashed var(--gray-200);
+  margin-top: 4px;
+}
+
+/* module opt-out state */
+.rp-module-optout { opacity: 0.45; }
 
 /* recommendation panel (top-right) */
 .rp-rec-badge {
@@ -740,6 +790,30 @@ body { background: var(--off-white); color: var(--black); min-height: 100vh; }
   font-weight: 700;
   color: var(--black);
   margin-bottom: 10px;
+}
+
+/* Energieberechnung detail styles */
+.calc-formula {
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  background: var(--gray-100);
+  border-left: 3px solid var(--red);
+  padding: 7px 12px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 10px;
+  color: var(--gray-800);
+}
+.calc-subheading {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+}
+.calc-detail {
+  font-size: 12px;
+  color: var(--gray-600);
+  font-style: italic;
+  background: var(--gray-100) !important;
 }
 
 .answers-summary-list {

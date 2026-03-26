@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ALL_QUESTIONS } from './data/questions';
+import { berechneJahreskosten, getLastprofilKey, schaetzeJahresverbrauch } from './data/tarifData';
 import Sidebar from './components/Sidebar';
 import Results from './components/Results';
 import './App.css';
@@ -39,11 +40,45 @@ export default function App() {
     new Set(ALL_QUESTIONS.map((q) => q.id))
   );
 
+  // 8760-value JSON data loaded on mount
+  const [spotData, setSpotData]     = useState(null);
+  const [lpData,   setLpData]       = useState(null);
+  const [dataReady, setDataReady]   = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/data/spotpreise_2025_8760.json').then(r => r.json()),
+      fetch('/data/lastprofile_8760.json').then(r => r.json()),
+    ]).then(([spot, lp]) => {
+      setSpotData(spot);
+      setLpData(lp);
+      setDataReady(true);
+    }).catch(() => {
+      // Fallback: data files missing – calculations will be skipped
+      setDataReady(false);
+    });
+  }, []);
+
   // Derive annual consumption from Q1: direct value or fallback sub-question
   const rawConsumption = formData.allg_stromverbrauch;
-  const jv = rawConsumption === 'unbekannt'
+  const jvDirect = rawConsumption === 'unbekannt'
     ? (parseFloat(formData.allg_vorjahr) || 0)
     : (parseFloat(rawConsumption) || 0);
+
+  // If user said "unbekannt" AND no prior year entered, use consumption estimator
+  const jv = jvDirect > 0
+    ? jvDirect
+    : (rawConsumption === 'unbekannt' ? (schaetzeJahresverbrauch(formData).gesamt || 0) : 0);
+
+  // Tariff comparison (computed on demand when results shown)
+  const jahreskosten = (showResults && dataReady && jv > 0)
+    ? berechneJahreskosten(
+        jv,
+        spotData,
+        lpData[getLastprofilKey(formData)],
+        formData
+      )
+    : null;
 
   function setAnswer(id, value) {
     setFormData((prev) => ({ ...prev, [id]: value }));
@@ -51,7 +86,6 @@ export default function App() {
   }
 
   function toggleEnabled(id) {
-    if (id === JAHRESVERBRAUCH_Q.id) return; // always required
     setEnabledQuestions((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -226,17 +260,13 @@ export default function App() {
             <ul className="options-list-items">
               {ALL_QUESTIONS.map((q) => (
                 <li key={q.id} className="options-item">
-                  <label className={`options-label${q.id === JAHRESVERBRAUCH_Q.id ? ' options-label-locked' : ''}`}>
+                  <label className="options-label">
                     <input
                       type="checkbox"
                       checked={enabledQuestions.has(q.id)}
-                      disabled={q.id === JAHRESVERBRAUCH_Q.id}
                       onChange={() => toggleEnabled(q.id)}
                     />
                     <span>{q.parent ? '→ ' : ''}{q.question}</span>
-                    {q.id === JAHRESVERBRAUCH_Q.id && (
-                      <span className="options-locked-badge">Pflichtfeld</span>
-                    )}
                   </label>
                 </li>
               ))}
@@ -270,7 +300,7 @@ export default function App() {
           </div>
 
           <div className="sidebar-col">
-            <Sidebar jahresverbrauch={jv} />
+            <Sidebar jahresverbrauch={jv} spotData={spotData} />
           </div>
         </div>
 
@@ -279,6 +309,7 @@ export default function App() {
             <Results
               formData={formData}
               jahresverbrauch={jv}
+              jahreskosten={jahreskosten}
               onReset={handleReset}
             />
           </div>

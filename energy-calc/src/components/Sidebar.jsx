@@ -1,11 +1,26 @@
-const GRUNDPREIS    = 122.96; // EUR/Jahr (Festtarif)
-const ARBEITSPREIS  = 0.3571; // EUR/kWh  (SachsenEnergie Grundversorgung ab 01.01.2026)
-const DYNAMIC_PRICE = 0.22;   // Dynamischer Tarif — Platzhalterwert (EPEX SPOT Ø)
+import { TARIF_A, TARIF_B } from '../data/tarifData';
+import { HOURLY_EPEX } from '../data/epexData';
 
-function CostChart({ jahresverbrauch }) {
+const ARBEITSPREIS = TARIF_A.arbeitspreis;
+const GRUNDPREIS   = TARIF_A.grundpreis;
+const PREISADDER   = TARIF_B.preisadder;
+
+// Mean EPEX price from placeholder 24-h profile
+const EPEX_MEAN = HOURLY_EPEX.reduce((s, v) => s + v, 0) / HOURLY_EPEX.length;
+
+// Compute dynamic tariff cost using spot mean when no 8760 data available
+function dynCostEstimate(kwh, spotData) {
+  if (spotData && spotData.length === 8760) {
+    const mean = spotData.reduce((s, v) => s + v, 0) / 8760;
+    return Math.round(GRUNDPREIS + kwh * (mean + PREISADDER));
+  }
+  return Math.round(GRUNDPREIS + kwh * (EPEX_MEAN + PREISADDER));
+}
+
+function CostChart({ jahresverbrauch, spotData }) {
   const kwh      = jahresverbrauch;
   const festCost = kwh > 0 ? Math.round(GRUNDPREIS + kwh * ARBEITSPREIS) : 0;
-  const dynCost  = Math.round(kwh * DYNAMIC_PRICE);
+  const dynCost  = kwh > 0 ? dynCostEstimate(kwh, spotData) : 0;
   const savings  = festCost - dynCost;
 
   const max     = festCost > 0 ? festCost * 1.25 : 1000;
@@ -16,7 +31,7 @@ function CostChart({ jahresverbrauch }) {
   return (
     <div className="bar-chart">
       <div className="bar-row">
-        <span className="bar-label">Festtarif</span>
+        <span className="bar-label">Festtarif (A)</span>
         <div className="bar-track">
           <div className="bar-fill user-bar" style={{ width: hasData ? `${festPct}%` : '0%' }} />
         </div>
@@ -24,7 +39,7 @@ function CostChart({ jahresverbrauch }) {
       </div>
 
       <div className="bar-row">
-        <span className="bar-label">Dynamischer Tarif*</span>
+        <span className="bar-label">Dynamischer Tarif (B)</span>
         <div className="bar-track">
           <div className="bar-fill dyn-bar" style={{ width: hasData ? `${dynPct}%` : '0%' }} />
         </div>
@@ -39,17 +54,17 @@ function CostChart({ jahresverbrauch }) {
       )}
 
       <p className="chart-note">
-        * Dynamischer Tarif basiert auf EPEX SPOT Durchschnittswerten.
+        Dynamischer Tarif: EPEX SPOT Ø + Netzentgelt/Umlagen.
         Individuelle Einsparungen können variieren.
       </p>
     </div>
   );
 }
 
-export default function Sidebar({ jahresverbrauch }) {
+export default function Sidebar({ jahresverbrauch, spotData }) {
   const kwh      = jahresverbrauch;
   const festCost = kwh > 0 ? Math.round(GRUNDPREIS + kwh * ARBEITSPREIS) : 0;
-  const dynCost  = Math.round(kwh * DYNAMIC_PRICE);
+  const dynCost  = kwh > 0 ? dynCostEstimate(kwh, spotData) : 0;
   const savings  = festCost - dynCost;
   const hasData  = kwh > 0;
 
@@ -57,7 +72,7 @@ export default function Sidebar({ jahresverbrauch }) {
     <div className="sidebar">
       <div className="sidebar-graph-box">
         <h3 className="sidebar-section-title">Einsparpotenzial — Jahreskosten</h3>
-        <CostChart jahresverbrauch={jahresverbrauch} />
+        <CostChart jahresverbrauch={jahresverbrauch} spotData={spotData} />
       </div>
 
       <div className="sidebar-info-box">
@@ -73,11 +88,11 @@ export default function Sidebar({ jahresverbrauch }) {
               <span className="info-val">{kwh.toLocaleString('de-DE')} kWh</span>
             </li>
             <li>
-              <span className="info-key">Kosten (Festtarif)</span>
+              <span className="info-key">Kosten (Festtarif A)</span>
               <span className="info-val">ca. {festCost.toLocaleString('de-DE')} €</span>
             </li>
             <li>
-              <span className="info-key">Kosten (Dyn. Tarif)*</span>
+              <span className="info-key">Kosten (Dyn. Tarif B)</span>
               <span className="info-val">ca. {dynCost.toLocaleString('de-DE')} €</span>
             </li>
             <li className="savings-row">
@@ -87,7 +102,7 @@ export default function Sidebar({ jahresverbrauch }) {
           </ul>
         )}
         <p className="info-note">
-          * Basierend auf Platzhalterwerten. Wird mit echten EPEX SPOT Daten aktualisiert.
+          Schätzung auf Basis EPEX SPOT 2025 Ø + Netzentgelt/Umlagen.
         </p>
       </div>
     </div>

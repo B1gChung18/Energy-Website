@@ -1,6 +1,12 @@
 // 1. Gebäude & Verbrauch
 export const QUESTION_DEFS = [
   {
+    id: 'personen',
+    question: 'Wie viele Personen leben in Ihrem Haushalt?',
+    type: 'choice',
+    options: ['1', '2', '3', '4', '5+'],
+  },
+  {
     id: 'allg_stromverbrauch',
     question: 'Wie hoch ist Ihr allgemeiner Stromverbrauch?',
     type: 'number_or_unknown',
